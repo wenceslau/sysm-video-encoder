@@ -1,0 +1,2 @@
+go mod init encoder     - to create a go module
+go test ./...           - to run all tests

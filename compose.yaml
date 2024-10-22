@@ -1,0 +1,9 @@
+services:
+
+  app:
+    build: .
+    volumes:
+      - .:/go/src/
+
+
+# docker compose exec app bash
