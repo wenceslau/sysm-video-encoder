@@ -2,3 +2,5 @@ docker compose exec app bash - to enter the container
 
 go mod init encoder     - to create a go module
 go test ./...           - to run all tests
+
+export GOOGLE_APPLICATION_CREDENTIALS="/go/src/bucket-encoder-credential.json" - to set the path to the credentials file
