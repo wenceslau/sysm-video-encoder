@@ -13,7 +13,7 @@ import (
 var db database.Database
 
 func init() {
-	err := godotenv.Load()
+	err := godotenv.Load("../../../.env")
 	if err != nil {
 		panic(err)
 	}

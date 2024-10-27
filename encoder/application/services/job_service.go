@@ -21,7 +21,7 @@ func (j *JobService) Start() error {
 		return j.failJob(err)
 	}
 
-	err = j.VideoService.Download(os.Getenv("INPUT_BUCKET_NAME"))
+	err = j.VideoService.Download(os.Getenv("INPUT_BUCKET_NAME") + "/" + j.VideoService.Video.ResourceID)
 	if err != nil {
 		return j.failJob(err)
 	}
@@ -83,7 +83,7 @@ func (j *JobService) performUpload() error {
 
 	videoUpload := NewVideoUploadManager()
 	videoUpload.OutputBucket = os.Getenv("OUTPUT_BUCKET_NAME")
-	videoUpload.VideoPath = os.Getenv("LOCAL_STORAGE_PATH") + "/" + j.VideoService.Video.ResourceID
+	videoUpload.VideoPath = os.Getenv("LOCAL_STORAGE_PATH") + "/" + j.VideoService.Video.ID
 	concurrency, _ := strconv.Atoi(os.Getenv("CONCURRENCY_UPLOAD"))
 	doneUpload := make(chan string)
 

@@ -4,4 +4,13 @@ go mod init encoder     - to create a go module
 go test ./...           - to run all tests
 go clean -testcache     - to clean the test cache
 
+go run -race main.go    - to run the application, using race condition detector
+
 export GOOGLE_APPLICATION_CREDENTIALS="/go/src/bucket-encoder-credential.json" - to set the path to the credentials file
+
+
+create exchanges 'dlx' type fanout, to handle dead letter messages, rejected messages
+
+create queue video_success, and bind it to the exchange 'amq.direct' with routing key 'jobs'
+create queue videos_failed, and bind it to the exchange 'dlx' with routing key 'jobs'
+

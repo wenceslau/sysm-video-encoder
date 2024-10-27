@@ -35,7 +35,7 @@ func TestVideoServiceUpload(t *testing.T) {
 
 	videoUpload := services.NewVideoUploadManager()
 	videoUpload.OutputBucket = "sysm_catalogo_videos"
-	videoUpload.VideoPath = os.Getenv("LOCAL_STORAGE_PATH") + "/" + video.ResourceID
+	videoUpload.VideoPath = os.Getenv("LOCAL_STORAGE_PATH") + "/" + video.ID
 
 	doneUpload := make(chan string)
 	go videoUpload.ProcessUpload(100, doneUpload)

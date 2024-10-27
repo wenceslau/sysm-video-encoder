@@ -49,7 +49,7 @@ func (v *VideoService) Download(bucketName string) error {
 	}
 
 	// Create a new file to save the content read from the bucket
-	f, err := os.Create(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ResourceID + ".mp4")
+	f, err := os.Create(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ID + ".mp4")
 	if err != nil {
 		return err
 	}
@@ -61,20 +61,20 @@ func (v *VideoService) Download(bucketName string) error {
 	}
 	defer f.Close()
 
-	log.Printf("Video %v has been downloaded", v.Video.ResourceID)
+	log.Printf("Video %v has been downloaded", v.Video.ID)
 
 	return nil
 }
 
 func (v *VideoService) Fragment() error {
 	// Create a new folder to save the fragments of the video. os.ModePerm is the permission to access the folder
-	err := os.Mkdir(os.Getenv("LOCAL_STORAGE_PATH")+"/"+v.Video.ResourceID, os.ModePerm)
+	err := os.Mkdir(os.Getenv("LOCAL_STORAGE_PATH")+"/"+v.Video.ID, os.ModePerm)
 	if err != nil {
 		return err
 	}
 
-	source := os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ResourceID + ".mp4"
-	target := os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ResourceID + ".frag"
+	source := os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ID + ".mp4"
+	target := os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ID + ".frag"
 
 	cmd := exec.Command("mp4fragment", source, target)
 	output, err := cmd.CombinedOutput()
@@ -90,7 +90,7 @@ func (v *VideoService) Fragment() error {
 func (v *VideoService) Encode() error {
 	cmdArgs := []string{}
 	// Path to the mp4dash binary
-	cmdArgs = append(cmdArgs, os.Getenv("LOCAL_STORAGE_PATH")+"/"+v.Video.ResourceID+".frag")
+	cmdArgs = append(cmdArgs, os.Getenv("LOCAL_STORAGE_PATH")+"/"+v.Video.ID+".frag")
 
 	// Command to segment the video
 	cmdArgs = append(cmdArgs, "--use-segment-timeline")
@@ -99,7 +99,7 @@ func (v *VideoService) Encode() error {
 	cmdArgs = append(cmdArgs, "-o")
 
 	// Path to save the video
-	cmdArgs = append(cmdArgs, os.Getenv("LOCAL_STORAGE_PATH")+"/"+v.Video.ResourceID)
+	cmdArgs = append(cmdArgs, os.Getenv("LOCAL_STORAGE_PATH")+"/"+v.Video.ID)
 
 	// Command
 	cmdArgs = append(cmdArgs, "-f")
@@ -120,25 +120,25 @@ func (v *VideoService) Encode() error {
 }
 
 func (v *VideoService) Finish() error {
-	err := os.Remove(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ResourceID + ".mp4")
+	err := os.Remove(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ID + ".mp4")
 	if err != nil {
 		log.Println("Error removing the video: ", err)
 		return err
 	}
 
-	err = os.Remove(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ResourceID + ".frag")
+	err = os.Remove(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ID + ".frag")
 	if err != nil {
 		log.Println("Error removing the frag: ", err)
 		return err
 	}
 
-	err = os.RemoveAll(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ResourceID)
+	err = os.RemoveAll(os.Getenv("LOCAL_STORAGE_PATH") + "/" + v.Video.ID)
 	if err != nil {
 		log.Println("Error removing the folder with the fragments: ", err)
 		return err
 	}
 
-	log.Println("Files have been removed", v.Video.ResourceID)
+	log.Println("Files have been removed", v.Video.ID)
 
 	return err
 
